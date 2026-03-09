@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+    depends_on:
+      - supabase-db
+      - supabase-rest
+
+  # Supabase Stack Reference (Minimal for Dockploy execution)
+  supabase-db:
+    image: supabase/postgres:15.1.0.117
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  supabase-rest:
+    image: postgrest/postgrest:v11.2.0
+    restart: always
+    depends_on:
+      - supabase-db
+    environment:
+      PGRST_DB_URI: postgresql://postgres:${POSTGRES_PASSWORD}@supabase-db:5432/postgres
+      PGRST_JWT_SECRET: ${JWT_SECRET}
+    ports:
+      - "3001:3000"
+
+  supabase-auth:
+    image: supabase/gotrue:v2.103.0
+    restart: always
+    depends_on:
+      - supabase-db
+    environment:
+      GOTRUE_DB_DRIVER: postgres
+      GOTRUE_DB_DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@supabase-db:5432/postgres
+      GOTRUE_JWT_SECRET: ${JWT_SECRET}
+      GOTRUE_API_HOST: 0.0.0.0
+      GOTRUE_API_PORT: 9999
+    ports:
+      - "9999:9999"
+
+volumes:
+  db-data:
