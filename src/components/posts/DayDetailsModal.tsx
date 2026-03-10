@@ -86,6 +86,7 @@ export function DayDetailsModal({ isOpen, onClose, date, posts, onPostClick, onA
                             })
                         )}
                     </div>
+                </div>
             </DialogContent>
         </Dialog>
     )
