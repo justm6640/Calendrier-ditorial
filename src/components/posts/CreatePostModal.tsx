@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import { useState, useEffect } from 'react'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
@@ -68,92 +69,102 @@ export function CreatePostModal({ isOpen, onClose, selectedDate, asset, recentAs
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-[425px]">
-                <form onSubmit={handleSubmit}>
-                    <DialogHeader>
+            <DialogContent className="max-w-[95vw] sm:max-w-[500px] p-0 overflow-hidden bg-background/95 backdrop-blur-xl border-border/50">
+                <form onSubmit={handleSubmit} className="flex flex-col max-h-[90vh]">
+                    <DialogHeader className="p-6 pb-0">
                         <DialogTitle>Planifier un Post</DialogTitle>
                         <DialogDescription>
                             Programmé pour le {format(selectedDate, 'dd MMMM yyyy', { locale: fr })}
                         </DialogDescription>
                     </DialogHeader>
-                    <div className="grid gap-4 py-4">
+                    <ScrollArea className="max-h-[60vh] px-1">
+                        <div className="grid gap-6 py-4">
 
-                        {/* Asset Preview & Selection */}
-                        <div className="space-y-3">
-                            <Label>Médias du Post (Carrousel)</Label>
+                            {/* Asset Preview & Selection */}
+                            <div className="space-y-4">
+                                <Label className="text-sm font-semibold">Médias du Post (Carrousel)</Label>
 
-                            {/* Selected Assets row */}
-                            <div className="flex gap-2 overflow-x-auto pb-2">
-                                {selectedAssets.map((selAsset, idx) => (
-                                    <div key={idx} className="w-20 h-20 flex-shrink-0 relative rounded-md overflow-hidden border-2 border-primary group">
-                                        <img src={selAsset.url} alt={`Selected ${idx}`} className="w-full h-full object-cover" />
-                                        <button
-                                            type="button"
-                                            onClick={() => setSelectedAssets(prev => prev.filter(a => a.id !== selAsset.id))}
-                                            className="absolute top-1 right-1 bg-black/50 hover:bg-black/80 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
-                                        >
-                                            <X className="h-3 w-3" />
-                                        </button>
-                                    </div>
-                                ))}
-
-                                {selectedAssets.length < 10 && (
-                                    <div className="w-20 h-20 flex-shrink-0 flex items-center justify-center border-2 border-dashed rounded-md bg-muted text-muted-foreground">
-                                        <Plus className="h-6 w-6 opacity-50" />
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Recent Assets to pick from */}
-                            <div className="pt-2 border-t">
-                                <Label className="text-xs text-muted-foreground mb-2 block">Ajouter depuis les médias récents :</Label>
-                                <div className="flex gap-2 overflow-x-auto pb-2">
-                                    {recentAssets.filter(ra => !selectedAssets.find(sa => sa.id === ra.id)).map(ra => (
-                                        <button
-                                            key={ra.id}
-                                            type="button"
-                                            onClick={() => setSelectedAssets(prev => [...prev, ra])}
-                                            className="w-12 h-12 flex-shrink-0 rounded-md overflow-hidden border border-border hover:border-primary transition-colors"
-                                        >
-                                            <img src={ra.url} alt={ra.name} className="w-full h-full object-cover opacity-70 hover:opacity-100" />
-                                        </button>
+                                {/* Selected Assets row */}
+                                <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+                                    {selectedAssets.map((selAsset, idx) => (
+                                        <div key={idx} className="w-24 h-24 flex-shrink-0 relative rounded-xl overflow-hidden border-2 border-primary shadow-md group">
+                                            <img src={selAsset.url} alt={`Selected ${idx}`} className="w-full h-full object-cover" />
+                                            <button
+                                                type="button"
+                                                onClick={() => setSelectedAssets(prev => prev.filter(a => a.id !== selAsset.id))}
+                                                className="absolute top-1.5 right-1.5 bg-black/60 hover:bg-black/80 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm"
+                                            >
+                                                <X className="h-3.5 w-3.5" />
+                                            </button>
+                                            <div className="absolute bottom-1 left-1 bg-primary text-[10px] font-bold px-1.5 py-0.5 rounded-md text-white">
+                                                {idx + 1}
+                                            </div>
+                                        </div>
                                     ))}
+
+                                    {selectedAssets.length < 10 && (
+                                        <div className="w-24 h-24 flex-shrink-0 flex items-center justify-center border-2 border-dashed rounded-xl bg-muted/30 text-muted-foreground hover:bg-muted/50 transition-colors cursor-default">
+                                            <Plus className="h-8 w-8 opacity-20" />
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Recent Assets to pick from */}
+                                <div className="pt-4 border-t border-border/40">
+                                    <Label className="text-xs font-medium text-muted-foreground mb-3 block uppercase tracking-wider">Ajouter depuis vos médias récents</Label>
+                                    <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                                        {recentAssets.filter(ra => !selectedAssets.find(sa => sa.id === ra.id)).map(ra => (
+                                            <button
+                                                key={ra.id}
+                                                type="button"
+                                                onClick={() => setSelectedAssets(prev => [...prev, ra])}
+                                                className="w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden border border-border/50 hover:border-primary transition-all hover:scale-105 active:scale-95 shadow-sm"
+                                            >
+                                                <img src={ra.url} alt={ra.name} className="w-full h-full object-cover opacity-80 hover:opacity-100" />
+                                            </button>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div className="grid gap-2">
-                            <Label htmlFor="platform">Plateforme cible</Label>
-                            <Select value={platform} onValueChange={(val) => setPlatform(val as string)}>
-                                <SelectTrigger id="platform">
-                                    <SelectValue placeholder="Sélectionnez une plateforme" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="instagram">Instagram</SelectItem>
-                                    <SelectItem value="tiktok">TikTok</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
+                            <div className="grid gap-3">
+                                <Label htmlFor="platform" className="text-sm font-semibold">Plateforme cible</Label>
+                                <Select value={platform} onValueChange={(val) => setPlatform(val as string)}>
+                                    <SelectTrigger id="platform" className="h-11">
+                                        <SelectValue placeholder="Sélectionnez une plateforme" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="instagram">Instagram</SelectItem>
+                                        <SelectItem value="tiktok">TikTok</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
 
-                        <div className="grid gap-2">
-                            <Label htmlFor="caption">Légende (Texte du post)</Label>
-                            <Textarea
-                                id="caption"
-                                value={caption}
-                                onChange={(e) => setCaption(e.target.value)}
-                                placeholder="Écrivez votre texte ici..."
-                                className="h-24 resize-none"
-                                required
-                            />
-                        </div>
+                            <div className="grid gap-3">
+                                <Label htmlFor="caption" className="text-sm font-semibold">Légende (Texte du post)</Label>
+                                <Textarea
+                                    id="caption"
+                                    value={caption}
+                                    onChange={(e) => setCaption(e.target.value)}
+                                    placeholder="Écrivez votre texte ici..."
+                                    className="min-h-[120px] resize-none focus-visible:ring-primary h-auto"
+                                    required
+                                />
+                            </div>
 
-                    </div>
-                    <DialogFooter>
-                        <Button type="button" variant="outline" onClick={onClose} disabled={isSubmitting}>
+                        </div>
+                    </ScrollArea>
+                    <DialogFooter className="gap-2 sm:gap-0 pt-2">
+                        <Button type="button" variant="ghost" onClick={onClose} disabled={isSubmitting} className="flex-1 sm:flex-none">
                             Annuler
                         </Button>
-                        <Button type="submit" disabled={isSubmitting}>
-                            {isSubmitting ? 'Planification...' : 'Planifier'}
+                        <Button type="submit" disabled={isSubmitting} className="flex-1 sm:flex-none px-8">
+                            {isSubmitting ? (
+                                <div className="flex items-center gap-2">
+                                    <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                                    Planification...
+                                </div>
+                            ) : 'Planifier'}
                         </Button>
                     </DialogFooter>
                 </form>
