@@ -10,7 +10,8 @@ import { CreatePostModal } from '@/components/posts/CreatePostModal'
 import { PostDetailsModal } from '@/components/posts/PostDetailsModal'
 import { DayDetailsModal } from '@/components/posts/DayDetailsModal'
 import { createClient } from '@/lib/supabase/client'
-import { Loader2, Calendar, Grid3X3 } from 'lucide-react'
+import { Loader2, Calendar, Grid3X3, Share2 } from 'lucide-react'
+import { toast } from 'sonner'
 
 interface MediaAsset {
     id: string
@@ -18,7 +19,7 @@ interface MediaAsset {
     url: string
 }
 
-export function DashboardClientView({ userId, agencyName, initialPosts = [] }: { userId: string, agencyName: string, initialPosts?: any[] }) {
+export function DashboardClientView({ userId, agencyId, agencyName, initialPosts = [] }: { userId: string, agencyId: string, agencyName: string, initialPosts?: any[] }) {
     const [assets, setAssets] = useState<MediaAsset[]>([])
     const [isLoading, setIsLoading] = useState(true)
     const [activeId, setActiveId] = useState<string | null>(null)
@@ -95,8 +96,14 @@ export function DashboardClientView({ userId, agencyName, initialPosts = [] }: {
     const handlePostClick = (post: any) => {
         setSelectedPostContext(post)
         setIsPostModalOpen(true)
-        // If coming from Day Modal, don't close Day Modal automatically, 
-        // they can overlap, or we can close it. We'll leave it up open underneath.
+    }
+
+    const handleShare = () => {
+        const shareUrl = `${window.location.origin}/share/${agencyId}`
+        navigator.clipboard.writeText(shareUrl)
+        toast.success("Lien de partage copié !", {
+            description: "Vous pouvez maintenant envoyer ce lien à votre client."
+        })
     }
 
     return (
@@ -129,8 +136,16 @@ export function DashboardClientView({ userId, agencyName, initialPosts = [] }: {
 
                 {/* Right Side: Calendar or Feed */}
                 <div className="flex-1 min-w-0 flex flex-col gap-4">
-                    {/* View Toggle */}
-                    <div className="flex justify-end">
+                    {/* View Toggle & Share */}
+                    <div className="flex justify-end items-center gap-3">
+                        <button
+                            onClick={handleShare}
+                            className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium border bg-background hover:bg-muted transition-colors shadow-sm"
+                        >
+                            <Share2 className="w-4 h-4 mr-2" />
+                            Partager
+                        </button>
+
                         <div className="inline-flex items-center justify-center rounded-md bg-muted p-1 text-muted-foreground w-auto">
                             <button
                                 onClick={() => setViewMode('calendar')}

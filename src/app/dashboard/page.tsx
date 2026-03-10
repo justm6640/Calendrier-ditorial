@@ -37,6 +37,7 @@ export default async function DashboardPage() {
 
             <DashboardClientView
                 userId={user?.id || ''}
+                agencyId={agencyData?.agency_id || ''}
                 agencyName={agencyName}
                 initialPosts={posts || []}
             />
