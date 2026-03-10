@@ -106,6 +106,12 @@ export function DashboardClientView({ userId, agencyId, agencyName, initialPosts
         })
     }
 
+    const handleAddPost = (date: Date) => {
+        setCreateSelectedDate(date)
+        setIsDayModalOpen(false)
+        setIsCreateModalOpen(true)
+    }
+
     return (
         <DndContext
             onDragStart={handleDragStart}
@@ -208,6 +214,7 @@ export function DashboardClientView({ userId, agencyId, agencyName, initialPosts
                 date={selectedDayContext}
                 posts={initialPosts.filter(p => selectedDayContext && new Date(p.scheduled_at).toDateString() === selectedDayContext.toDateString())}
                 onPostClick={handlePostClick}
+                onAddPost={handleAddPost}
             />
 
             <PostDetailsModal
