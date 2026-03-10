@@ -1,0 +1,63 @@
+
+> editorial-calendar@0.1.0 build
+> next build
+
+Ôû▓ Next.js 16.1.6 (Turbopack)
+
+ÔÜá The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+
+> Build error occurred
+Error: Turbopack build failed with 2 errors:
+./src/app/(auth)/login/actions.ts:14:25
+Parsing ecmascript source code failed
+  12 |     if (!email || !password) {
+  13 |         return {
+> 14 |             error: 'L\\'email et le mot de passe sont requis' }
+     |                         ^^^^^
+  15 |   }
+  16 |
+  17 |         const { error } = await supabase.auth.signInWithPassword({
+
+Expected ',', got 'ident'
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(auth)/login/actions.ts [Client Component Browser]
+    ./src/app/(auth)/login/page.tsx [Client Component Browser]
+    ./src/app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(auth)/login/actions.ts [Client Component SSR]
+    ./src/app/(auth)/login/page.tsx [Client Component SSR]
+    ./src/app/(auth)/login/page.tsx [Server Component]
+
+
+./src/app/(auth)/login/page.tsx:8:1
+Module not found: Can't resolve '@/components/ui/label'
+   6 | import { Input } from '@/components/ui/input'
+   7 | import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+>  8 | import { Label } from '@/components/ui/label'
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   9 | import { toast } from 'sonner'
+  10 |
+  11 | const initialState = {
+
+Import map: aliased to relative './src/components/ui/label' inside of [project]/
+
+
+Import traces:
+  Client Component Browser:
+    ./src/app/(auth)/login/page.tsx [Client Component Browser]
+    ./src/app/(auth)/login/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/app/(auth)/login/page.tsx [Client Component SSR]
+    ./src/app/(auth)/login/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (./src/app/(auth)/login/actions.ts:14:25)
+    at <unknown> (./src/app/(auth)/login/page.tsx:8:1)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
