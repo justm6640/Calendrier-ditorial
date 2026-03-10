@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { format } from 'date-fns'
 import { fr } from 'date-fns/locale'
 import { createPost } from '@/app/actions/post'
@@ -27,17 +27,16 @@ export function CreatePostModal({ isOpen, onClose, selectedDate, asset, recentAs
     const [selectedAssets, setSelectedAssets] = useState<{ name: string; url: string; id: string }[]>([])
 
     // Update selected assets when the initial dropped asset changes
-    import('react').then(React => {
-        React.useEffect(() => {
-            if (asset && selectedAssets.length === 0 && isOpen) {
-                setSelectedAssets([asset])
-            }
-            if (!isOpen) {
-                // Reset on close
-                setTimeout(() => setSelectedAssets([]), 300)
-            }
-        }, [asset, isOpen])
-    })
+    useEffect(() => {
+        if (asset && selectedAssets.length === 0 && isOpen) {
+            setSelectedAssets([asset])
+        }
+        if (!isOpen) {
+            // Reset on close
+            const timer = setTimeout(() => setSelectedAssets([]), 300)
+            return () => clearTimeout(timer)
+        }
+    }, [asset, isOpen])
 
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault()
@@ -65,7 +64,7 @@ export function CreatePostModal({ isOpen, onClose, selectedDate, asset, recentAs
         }
     }
 
-    if (!selectedDate || !asset) return null
+    if (!selectedDate) return null
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
