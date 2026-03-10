@@ -112,10 +112,10 @@ export function DashboardClientView({ userId, agencyId, agencyName, initialPosts
             onDragEnd={handleDragEnd}
             modifiers={[restrictToWindowEdges]}
         >
-            <div className="flex h-[calc(100vh-8rem)] gap-6">
+            <div className="flex flex-col lg:flex-row h-auto lg:h-[calc(100vh-8rem)] gap-4 lg:gap-6">
 
-                {/* Left Side: Mini Library */}
-                <div className="w-64 flex-shrink-0 flex flex-col bg-muted/10 border rounded-xl overflow-hidden">
+                {/* Left Side: Mini Library - Hidden on mobile, appearing as a drawer or sidebar on large screens */}
+                <div className="hidden lg:flex w-64 flex-shrink-0 flex-col bg-muted/10 border rounded-xl overflow-hidden">
                     <div className="p-4 border-b bg-muted/20">
                         <h3 className="font-semibold text-sm">Récemment Ajoutés</h3>
                     </div>
@@ -137,7 +137,7 @@ export function DashboardClientView({ userId, agencyId, agencyName, initialPosts
                 {/* Right Side: Calendar or Feed */}
                 <div className="flex-1 min-w-0 flex flex-col gap-4">
                     {/* View Toggle & Share */}
-                    <div className="flex justify-end items-center gap-3">
+                    <div className="flex flex-wrap justify-center sm:justify-end items-center gap-2 sm:gap-3 px-1">
                         <button
                             onClick={handleShare}
                             className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1.5 text-sm font-medium border bg-background hover:bg-muted transition-colors shadow-sm"

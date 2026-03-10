@@ -25,7 +25,7 @@ export function FeedView({ posts = [], onPostClick }: FeedViewProps) {
 
             <div className="flex-1 overflow-y-auto p-4 sm:p-8 flex justify-center bg-muted/5">
                 {/* Max width to limit the grid size like a phone screen */}
-                <div className="w-full max-w-sm">
+                <div className="w-full max-w-md">
                     {sortedPosts.length === 0 ? (
                         <div className="text-center py-12 text-muted-foreground bg-background rounded-xl border border-dashed">
                             Aucun post planifié.
